@@ -1,0 +1,16 @@
+# virtual environment
+project1venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# environment files
+.env
+
+# test/build artifacts
+.pytest_cache/
+pip-wheel-metadata/
+build/
+dist/
