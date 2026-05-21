@@ -1,4 +1,6 @@
 import streamlit as st
+from api_calling import note_generator
+from PIL import Image
 
 st.title("Note summary and quiz generator")
 st.markdown("Upload upto 3 images to generate note summary and quizzes")
@@ -30,19 +32,29 @@ with st.sidebar:
         index=None
     )
 
-    if selected_difficulty:
-        st.markdown(selected_difficulty)
-    else:
-        st.error("You must select a difficulty")
+    pressed = st.button("Click the button to initiate AI")
 
-    button = st.button("Click the button to initiate AI")
+if pressed:
+    if not images:
+        st.error("You must upload an image")
+    if not selected_difficulty:
+        st.error("You must choose a difficulty")
+    
+    if images and selected_difficulty:
+        # note
+        with st.container(border=True):
+            st.subheader("Your Note")
+            st.text(note_generator(images))
 
-    if button:
-        if len(images)<0:
-            st.error("Upload atleast 1 image")
-        else:
-            if selected_difficulty:
-                st.error("Please choose a difficulty")
-            # else:
+        # Audio Transcript
+        with st.container(border=True):
+            st.subheader("Audio Transcription")
+            st.text("Audion scrpt wil be sonw")
+
+        # quiz
+        with st.container(border=True):
+            st.subheader(f"Quiz ({selected_difficulty})")
+            st.text("Quiz scrpt wil be sonw")
+
 
 
