@@ -1,5 +1,5 @@
 import streamlit as st
-from api_calling import note_generator
+from api_calling import note_generator, audio_transcription, quiz_generator
 from PIL import Image
 
 st.title("Note summary and quiz generator")
@@ -7,12 +7,17 @@ st.markdown("Upload upto 3 images to generate note summary and quizzes")
 st.divider()
 
 with st.sidebar:
-    st.header("Controlls")
+    st.header("Controls")
     images = st.file_uploader(
         "Upload the photos of your notes",
         type=["jpg","jpeg","png"],
         accept_multiple_files=True
     )
+
+    pil_images = []
+
+    for img in images:
+        pil_images.append(Image.open(img))
 
     # images
     if images:
@@ -44,17 +49,31 @@ if pressed:
         # note
         with st.container(border=True):
             st.subheader("Your Note")
-            st.text(note_generator(images))
+
+            with st.spinner("AI is writing notes for you"):
+                generated_notes = note_generator(pil_images)
+                st.markdown(generated_notes)
 
         # Audio Transcript
         with st.container(border=True):
             st.subheader("Audio Transcription")
-            st.text("Audion scrpt wil be sonw")
+
+            # clearing the markdown
+            generated_notes = generated_notes.replace("#","")
+            generated_notes = generated_notes.replace("*","")
+            generated_notes = generated_notes.replace("_","")
+            generated_notes = generated_notes.replace("`","")
+            
+            with st.spinner("AI is generating audio for you"):
+                st.audio(audio_transcription(generated_notes))
 
         # quiz
         with st.container(border=True):
             st.subheader(f"Quiz ({selected_difficulty})")
-            st.text("Quiz scrpt wil be sonw")
+            
+            with st.spinner("AI is generating quiz for you"):
+                generated_quizzes = quiz_generator(pil_images, selected_difficulty)
+                st.markdown(generated_quizzes)
 
 
 
